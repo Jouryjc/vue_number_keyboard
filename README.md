@@ -25,7 +25,7 @@ npm run build
     </tr>
     <tr>
         <td>btnName</td>
-        <td>string</td>
+        <td>String</td>
         <td>右下角按钮名称，默认是“支付”</td>
     </tr>
     <tr>
