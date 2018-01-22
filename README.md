@@ -15,6 +15,10 @@ npm run dev
 npm run build
 ```
 
+# 用法
+
+    <number-keyboard></number-keyboard>
+
 
 # 可配置属性
 <table>
