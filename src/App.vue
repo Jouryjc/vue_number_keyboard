@@ -26,13 +26,28 @@
 
         <div class="sidebar">
             <div class="sidebar-item delCurInput"></div>
-            <div class="sidebar-item">支付</div>
+            <div class="sidebar-item">{{ btnName }}</div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    name: 'number-keyboard',
+    props: {
+        btnName: {
+            type: String,
+            dafault: '支付'
+        },
+        hasDotLength: {
+            type: Number,
+            default: 9
+        },
+        noDotLength: {
+            type: Number,
+            default: 6
+        }
+    },
     data () {
         return {
             result: '',
@@ -41,6 +56,7 @@ export default {
     },
     methods: {
         typeIn(event) {
+
             let self = this,
                 $tar = event.target || event.srcElment,
                 curInput = !!$tar.innerText ? $tar.innerText : $tar.classList[1],
@@ -74,7 +90,7 @@ export default {
 
             let _result = str + curInput
 
-            if (_result.length <= (_result.includes('.') ? 9 : 6)) {
+            if (_result.length <= (_result.includes('.') ? self.hasDotLength : self.noDotLength)) {
                 self.result = _result
             }
 
@@ -84,6 +100,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.fadeInUp {
+    animation-duration: 0.7;
+    -webkit-animation-duration: 0.7s;
+}
+.fadeOutDown {
+    animation-duration: 0.7;
+    -webkit-animation-duration: 0.7s;
+}
 #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
