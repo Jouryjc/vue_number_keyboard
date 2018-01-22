@@ -16,5 +16,32 @@ npm run build
 ```
 
 
+# 可配置属性
+<table>
+    <tr>
+        <th>属性</th>
+        <th>类型</th>
+        <th>备注</th>
+    </tr>
+    <tr>
+        <td>btnName</td>
+        <td>string</td>
+        <td>右下角按钮名称，默认是“支付”</td>
+    </tr>
+    <tr>
+        <td>hasDotLength</td>
+        <td>Number</td>
+        <td>含小数点的长度，小数点后默认是两位</td>
+    </tr>
+    <tr>
+        <td>noDotLength</td>
+        <td>Number</td>
+        <td>不含小数点的长度，小数点后默认是两位</td>
+    </tr>
+</table>
+
+
+
+
 
 
