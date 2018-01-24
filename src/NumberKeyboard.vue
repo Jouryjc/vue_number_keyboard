@@ -1,6 +1,5 @@
 <template>
-    <div id="app" @touchstart="typeIn" @contextmenu.prevent.stop :class="['animated' , { 'fadeInUp': keyboardShow , 'fadeOutDown': !keyboardShow}]">
-        
+    <div id="numberKeyboard" @touchstart="typeIn" @contextmenu.prevent.stop :class="['animated' , { 'fadeInUp': keyboardShow , 'fadeOutDown': !keyboardShow}]">
         <div class="container">
             <div class="item-group">
                 <div class="item">1</div>
@@ -26,38 +25,57 @@
 
         <div class="sidebar">
             <div class="sidebar-item delCurInput"></div>
-            <div class="sidebar-item">支付</div>
+            <div class="sidebar-item">{{ btnName }}</div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    data () {
-        return {
-            result: '',
-            keyboardShow: true
+    name: 'NumberKeyboard',
+    props: {
+        btnName: {
+            type: String
+        },
+        hasDotLength: {
+            type: Number,
+            default: 9
+        },
+        noDotLength: {
+            type: Number,
+            default: 6
+        },
+        result: {
+            type: String,
+            required: true
+        },
+        keyboardShow: {
+            type: Boolean,
+            default: true
         }
     },
     methods: {
         typeIn(event) {
+           
             let self = this,
                 $tar = event.target || event.srcElment,
                 curInput = !!$tar.innerText ? $tar.innerText : $tar.classList[1],
                 str = self.result
 
-            if (curInput == "支付") {
-                console.log("get result then pay")
+            if (curInput == self.btnName) {
+                self.$emit("childsubmit")
                 return;
             }
 
             if (curInput == "delCurInput") {
                 self.result = self.result.slice(0 , -1)
+                self.$emit('parentresult' , self.result)
                 return;
             }
 
             if (curInput == "hideKeyboard" && self.keyboardShow) {
-                self.keyboardShow = false
+                // self.keyboardShow = false
+                self.$emit('parenthide')
             }
 
             if (curInput == "." && str.includes('.')) {
@@ -74,17 +92,26 @@ export default {
 
             let _result = str + curInput
 
-            if (_result.length <= (_result.includes('.') ? 9 : 6)) {
+            if (_result.length <= (_result.includes('.') ? self.hasDotLength : self.noDotLength)) {
                 self.result = _result
             }
 
+            self.$emit('parentresult' , self.result)
         }
     }
 }
 </script>
 
 <style scoped lang="scss">
-#app {
+.fadeInUp {
+    animation-duration: 0.5;
+    -webkit-animation-duration: 0.5s;
+}
+.fadeOutDown {
+    animation-duration: 0.5;
+    -webkit-animation-duration: 0.5s;
+}
+#numberKeyboard {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

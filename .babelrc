@@ -2,5 +2,14 @@
     "presets": [
         "es2015"
     ],
-    "plugins": []
+    "plugins": [],
+    "env": {
+        "test": {
+            "presets": [
+                "es2015",
+                "env",
+                "babel-preset-power-assert"
+            ]
+        }
+    }
 }
