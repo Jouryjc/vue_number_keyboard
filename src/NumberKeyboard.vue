@@ -1,6 +1,5 @@
 <template>
-    <div id="app" @touchstart="typeIn" @contextmenu.prevent.stop :class="['animated' , { 'fadeInUp': keyboardShow , 'fadeOutDown': !keyboardShow}]">
-        
+    <div id="numberKeyboard" @touchstart="typeIn" @contextmenu.prevent.stop :class="['animated' , { 'fadeInUp': keyboardShow , 'fadeOutDown': !keyboardShow}]">
         <div class="container">
             <div class="item-group">
                 <div class="item">1</div>
@@ -33,11 +32,10 @@
 
 <script>
 export default {
-    name: 'number-keyboard',
+    name: 'NumberKeyboard',
     props: {
         btnName: {
-            type: String,
-            dafault: '支付'
+            type: String
         },
         hasDotLength: {
             type: Number,
@@ -46,34 +44,38 @@ export default {
         noDotLength: {
             type: Number,
             default: 6
-        }
-    },
-    data () {
-        return {
-            result: '',
-            keyboardShow: true
+        },
+        result: {
+            type: String,
+            required: true
+        },
+        keyboardShow: {
+            type: Boolean,
+            default: true
         }
     },
     methods: {
         typeIn(event) {
-
+           
             let self = this,
                 $tar = event.target || event.srcElment,
                 curInput = !!$tar.innerText ? $tar.innerText : $tar.classList[1],
                 str = self.result
 
-            if (curInput == "支付") {
-                console.log("get result then pay")
+            if (curInput == self.btnName) {
+                self.$emit("childsubmit")
                 return;
             }
 
             if (curInput == "delCurInput") {
                 self.result = self.result.slice(0 , -1)
+                self.$emit('parentresult' , self.result)
                 return;
             }
 
             if (curInput == "hideKeyboard" && self.keyboardShow) {
-                self.keyboardShow = false
+                // self.keyboardShow = false
+                self.$emit('parenthide')
             }
 
             if (curInput == "." && str.includes('.')) {
@@ -94,6 +96,7 @@ export default {
                 self.result = _result
             }
 
+            self.$emit('parentresult' , self.result)
         }
     }
 }
@@ -101,14 +104,14 @@ export default {
 
 <style scoped lang="scss">
 .fadeInUp {
-    animation-duration: 0.7;
-    -webkit-animation-duration: 0.7s;
+    animation-duration: 0.5;
+    -webkit-animation-duration: 0.5s;
 }
 .fadeOutDown {
-    animation-duration: 0.7;
-    -webkit-animation-duration: 0.7s;
+    animation-duration: 0.5;
+    -webkit-animation-duration: 0.5s;
 }
-#app {
+#numberKeyboard {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

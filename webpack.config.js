@@ -1,95 +1,76 @@
-var path = require('path')
-var webpack = require('webpack')
+
+var webpack = require("webpack")
+var path = require("path")
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
+
+var cssLoader = ExtractTextPlugin.extract("style-loader", "css-loader", "sass-loader")
 
 module.exports = {
-  entry: './src/main.js',
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'vue-number-keyboard.js',
-    library: 'VueNumberKeyboard',
-    libraryTarget: 'umd',
-    umdNamedDefine: true
-  },
-  module: {
-    rules: [
-        {
-            test: /(\.sass|\.scss)$/,
-            use: [
-                'sass-loader'
-            ]
-        },
-      {
-        test: /\.css$/,
-        use: [
-          'vue-style-loader',
-          'css-loader'
-        ],
-      }, 
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-          }
-          // other vue-loader options go here
-        }
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      /* {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]'
-        }
-      }, */
-      {
-            test: /\.(png|jpg|gif|svg)$/,
-            loader: 'url-loader',
-            options: {
-                limit: 10000
-            }
-      }
-    ]
-  },
-  resolve: {
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+    entry: {
+        app: path.resolve(__dirname, 'src/app.js')
     },
-    extensions: ['*', '.js', '.vue', '.json']
-  },
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true,
-    overlay: true
-  },
-  performance: {
-    hints: false
-  },
-  devtool: '#eval-source-map'
+    output: {
+        path: path.resolve(__dirname , 'build'),
+        filename: 'bundle.js'
+    },
+    module: {
+        loaders: [
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules|vue\/src|vue-router\/|vue-loader\/|vue-hot-reload-api\//,
+                loader: 'babel-loader'
+            },
+            { 
+                test: /\.css$/, 
+                loader: cssLoader 
+            },
+            {
+                test: /\.png$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000
+                }
+            }
+        ]
+    },
+    resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.esm.js'
+        }
+    },
+    // vue: {
+    //   loaders: {
+    //     css: ExtractTextPlugin.extract("css"),
+    //     stylus: ExtractTextPlugin.extract("css!stylus")
+    //   }
+    // },
+    devtool: "#source-map"
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
-  ])
+
+    delete module.exports.devtool
+    module.exports.plugins = [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        })
+        // new ExtractTextPlugin("build.css")
+    ]
+} else {
+
+    // module.exports.plugins = [
+    //   new ExtractTextPlugin("build.css")
+    // ]
+    // module.exports.devtool = '#source-map'
 }
