@@ -17,7 +17,8 @@ npm run build
 
 # 用法
 
-    <number-keyboard></number-keyboard>
+    <number-keyboard ref="child" :btn-name="btnName" :result="result" :keyboard-show="keyboardShow" @parenthide="hide" @parentresult="getChildResult" @childsubmit="parentsubmit"></number-keyboard>
+    
 
 
 # 可配置属性
